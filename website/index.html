@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Life of a Minos — Animation Planner</title>
+  <style>
+    :root {
+      --bg: #07090f;
+      --panel: #101522;
+      --panel-soft: #151b2b;
+      --text: #f2f5f8;
+      --muted: #9da8ba;
+      --line: rgba(255,255,255,0.11);
+      --gold: #d7a84f;
+      --gold-soft: rgba(215,168,79,0.14);
+      --danger: #d65b5b;
+      --green: #6ed19b;
+      --shadow: 0 18px 50px rgba(0,0,0,0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(215,168,79,0.13), transparent 34%),
+        radial-gradient(circle at 80% 10%, rgba(86,120,255,0.09), transparent 30%),
+        linear-gradient(135deg, #05060a 0%, #0b1020 55%, #07090f 100%);
+      color: var(--text);
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 310px 1fr;
+      min-height: 100vh;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      border-right: 1px solid var(--line);
+      background: rgba(7, 9, 15, 0.86);
+      backdrop-filter: blur(16px);
+      padding: 24px 18px;
+    }
+
+    .brand {
+      margin-bottom: 24px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.025));
+      box-shadow: var(--shadow);
+    }
+
+    .brand small {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .brand h1 {
+      font-size: 27px;
+      line-height: 1.05;
+      margin: 8px 0 10px;
+      letter-spacing: -1px;
+    }
+
+    .brand p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .nav-title {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      font-size: 11px;
+      margin: 18px 8px 10px;
+      font-weight: 700;
+    }
+
+    .top-nav,
+    .scene-list {
+      display: grid;
+      gap: 7px;
+    }
+
+    button,
+    .nav-button {
+      border: 0;
+      cursor: pointer;
+      color: var(--text);
+      background: transparent;
+      text-align: left;
+      border-radius: 14px;
+      padding: 11px 12px;
+      transition: 0.15s ease;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    button:hover,
+    .nav-button:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .nav-button.active,
+    .scene-button.active {
+      background: var(--gold-soft);
+      color: #ffd98b;
+      outline: 1px solid rgba(215,168,79,0.28);
+    }
+
+    .scene-button {
+      display: grid;
+      grid-template-columns: 31px 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .scene-num {
+      width: 27px;
+      height: 27px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      background: rgba(255,255,255,0.08);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .scene-button.active .scene-num {
+      background: rgba(215,168,79,0.26);
+      color: #ffd98b;
+    }
+
+    main {
+      padding: 42px;
+      max-width: 1180px;
+      width: 100%;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 250px;
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02)),
+        radial-gradient(circle at 70% 20%, rgba(215,168,79,0.2), transparent 32%),
+        var(--panel);
+      box-shadow: var(--shadow);
+      padding: 36px;
+      margin-bottom: 24px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -120px auto;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      background: rgba(215,168,79,0.09);
+      filter: blur(2px);
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .hero h2 {
+      font-size: clamp(42px, 7vw, 82px);
+      letter-spacing: -3px;
+      line-height: 0.94;
+      margin-bottom: 18px;
+      max-width: 800px;
+    }
+
+    .hero p {
+      max-width: 680px;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 16px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 22px 0;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 9px 13px;
+      font-size: 13px;
+    }
+
+    .save-indicator {
+      color: var(--green);
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(16,21,34,0.82);
+      box-shadow: 0 10px 32px rgba(0,0,0,0.22);
+      padding: 22px;
+    }
+
+    .card h3 {
+      font-size: 19px;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--gold);
+      font-weight: 800;
+      margin: 16px 0 8px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.055);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 14px 15px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 160px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: rgba(215,168,79,0.7);
+      box-shadow: 0 0 0 4px rgba(215,168,79,0.11);
+    }
+
+    select option {
+      background: #111827;
+      color: var(--text);
+    }
+
+    .scene-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+
+    .scene-header h2 {
+      font-size: clamp(31px, 5vw, 52px);
+      letter-spacing: -1.8px;
+      line-height: 1;
+    }
+
+    .scene-number-large {
+      color: var(--gold);
+      font-weight: 900;
+      font-size: 15px;
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .status-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 14px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 16px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .action-button {
+      width: auto;
+      background: rgba(215,168,79,0.16);
+      border: 1px solid rgba(215,168,79,0.27);
+      color: #ffd98b;
+      font-weight: 700;
+    }
+
+    .danger-button {
+      width: auto;
+      background: rgba(214,91,91,0.13);
+      border: 1px solid rgba(214,91,91,0.28);
+      color: #ff9f9f;
+      font-weight: 700;
+    }
+
+    .muted-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin-top: 10px;
+    }
+
+    .scene-map {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .scene-map button {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      min-height: 80px;
+    }
+
+
+
+    .character-section {
+      margin-top: 16px;
+    }
+
+    .character-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .character-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .character-card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.035);
+      padding: 16px;
+    }
+
+    .character-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .character-card-header strong {
+      color: #ffd98b;
+      letter-spacing: 0.4px;
+    }
+
+    .character-fields {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .character-fields textarea {
+      min-height: 90px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .footer-space {
+      height: 60px;
+    }
+
+    @media (max-width: 900px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: relative;
+        height: auto;
+      }
+
+      main {
+        padding: 24px;
+      }
+
+      .split {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <small>Animation planner</small>
+        <h1>Life of a Minos</h1>
+        <p>Story planner for a cinematic 1Hour 1Life Minecraft server movie. No commentary. Music and sound design carry the story.</p>
+      </div>
+
+      <div class="nav-title">Project</div>
+      <div class="top-nav">
+        <button class="nav-button active" data-panel="overview">Overview</button>
+        <button class="nav-button" data-panel="sceneMap">Scene Map</button>
+        <button class="nav-button" data-panel="trailer">Trailer / Server Ad</button>
+        <button class="nav-button" data-panel="audio">Music & Sound</button>
+      </div>
+
+      <div class="nav-title">Scenes</div>
+      <div class="scene-list" id="sceneList"></div>
+    </aside>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow">1Hour 1Life cinematic movie</div>
+        <h2>Life of a Minos</h2>
+        <p>Organize the full movie scene by scene, keep story details separated, track production progress, and build a trailer that sells the mystery without spoiling the plot.</p>
+        <div class="toolbar">
+          <span class="pill">22 scenes + 7 extra pages + scene character sheets</span>
+          <span class="pill">Music + sound effects only</span>
+          <span class="pill">Autosave: <span class="save-indicator" id="saveIndicator">ready</span></span>
+        </div>
+      </section>
+
+      <section class="panel active" id="overview">
+        <div class="grid">
+          <div class="card">
+            <h3>Movie Overview</h3>
+            <label>Core story idea</label>
+            <textarea data-save="overview.core" placeholder="Write the main idea of the movie here..."></textarea>
+
+            <label>Main mood</label>
+            <input data-save="overview.mood" placeholder="Example: mysterious, cinematic, emotional, intense" />
+          </div>
+
+          <div class="card">
+            <h3>Production Notes</h3>
+            <label>Recording plan</label>
+            <textarea data-save="overview.recording" placeholder="How/where you will record scenes on the server..."></textarea>
+
+            <label>Important rules</label>
+            <textarea data-save="overview.rules" placeholder="Example: no spoilers in trailer, no dialogue, keep it cinematic..."></textarea>
+          </div>
+
+          <div class="card">
+            <h3>Progress Snapshot</h3>
+            <p>This page stores your edits locally in this browser. The council of browser storage, sadly, will not transfer it magically to another device.</p>
+            <div class="button-row">
+              <button class="action-button" onclick="downloadBackup()">Download Backup</button>
+            </div>
+            <p class="muted-note">Use this before making big changes, moving devices, or editing risky stuff. Civilization survives another day.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="sceneMap">
+        <div class="card">
+          <h3>Scene Map</h3>
+          <p>Click any scene or extra story page to open its full planning page.</p>
+          <div class="scene-map" id="sceneMapButtons"></div>
+        </div>
+      </section>
+
+      <section class="panel" id="sceneEditor">
+        <div class="scene-header">
+          <div>
+            <div class="scene-number-large" id="sceneNumberLabel">Scene 1</div>
+            <h2 id="sceneTitleLabel">The Council</h2>
+          </div>
+        </div>
+
+        <div class="status-row">
+          <div class="card">
+            <label>Status</label>
+            <select id="sceneStatus"></select>
+          </div>
+          <div class="card">
+            <label>Scene mood</label>
+            <input id="sceneMood" placeholder="Example: tense, peaceful, mysterious" />
+          </div>
+          <div class="card">
+            <label>Priority</label>
+            <select id="scenePriority">
+              <option>Normal</option>
+              <option>Important</option>
+              <option>Very Important</option>
+              <option>Final Polish</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="split" style="margin-top:16px;">
+          <div class="card">
+            <h3>Full Scene Story</h3>
+            <p>Paste or write the full story for this scene here.</p>
+            <label>Story</label>
+            <textarea id="sceneStory" style="min-height: 420px;" placeholder="Write the full scene story here..."></textarea>
+          </div>
+
+          <div class="card">
+            <h3>Scene Details</h3>
+            <label>Key shots</label>
+            <textarea id="sceneShots" placeholder="Important camera shots / visual moments..."></textarea>
+
+            <label>Music direction</label>
+            <textarea id="sceneMusic" placeholder="Music mood, pacing, instruments, intensity..."></textarea>
+
+            <label>Sound effects</label>
+            <textarea id="sceneSfx" placeholder="Footsteps, portal sounds, fire, mobs, ambience..."></textarea>
+
+            <label>Trailer-worthy moments</label>
+            <textarea id="sceneTrailer" placeholder="Exciting non-spoiler moments from this scene..."></textarea>
+          </div>
+        </div>
+
+        <div class="card character-section hidden" id="characterSection">
+          <div class="character-toolbar">
+            <div>
+              <h3>Characters, Names & Skins</h3>
+              <p class="muted-note">Only for the 22 movie scenes. Add the characters appearing in this scene, with Minecraft name, skin, personality, and notes.</p>
+            </div>
+            <button class="action-button" id="addCharacterButton" type="button">Add Character</button>
+          </div>
+          <div class="character-list" id="characterList"></div>
+        </div>
+
+      </section>
+
+      <section class="panel" id="trailer">
+        <div class="grid">
+          <div class="card">
+            <h3>Trailer / Ad Plan</h3>
+            <p>Build a trailer that works as both a movie teaser and a server ad without spoiling the actual story.</p>
+
+            <label>Trailer concept</label>
+            <textarea data-save="trailer.concept" placeholder="What feeling should the trailer give? Mystery, survival, family, danger, legacy..."></textarea>
+
+            <label>Non-spoiler highlights</label>
+            <textarea data-save="trailer.highlights" placeholder="List exciting clips that do not reveal too much..."></textarea>
+          </div>
+
+          <div class="card">
+            <h3>Trailer Structure</h3>
+            <label>Opening</label>
+            <textarea data-save="trailer.opening" placeholder="Slow hook. Example: peaceful birth, strange council, quiet world..."></textarea>
+
+            <label>Build-up</label>
+            <textarea data-save="trailer.buildup" placeholder="Faster cuts, danger, mystery, action..."></textarea>
+
+            <label>Final shot</label>
+            <textarea data-save="trailer.final" placeholder="Strong ending shot without spoiling the movie..."></textarea>
+          </div>
+
+          <div class="card">
+            <h3>Server Ad Notes</h3>
+            <label>What the server offers</label>
+            <textarea data-save="trailer.serverOffers" placeholder="Survival, lore, families, community, mystery, events..."></textarea>
+
+            <label>Text overlays</label>
+            <textarea data-save="trailer.textOverlays" placeholder="Example: Every life matters. Every family has a story. Join 1Hour 1Life..."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="audio">
+        <div class="grid">
+          <div class="card">
+            <h3>Music Plan</h3>
+            <label>Main theme</label>
+            <textarea data-save="audio.theme" placeholder="Describe the main musical identity of the movie..."></textarea>
+
+            <label>Emotional moments</label>
+            <textarea data-save="audio.emotional" placeholder="Where music should feel sad, hopeful, peaceful, or nostalgic..."></textarea>
+          </div>
+
+          <div class="card">
+            <h3>Sound Effects Plan</h3>
+            <label>Important SFX list</label>
+            <textarea data-save="audio.sfx" placeholder="Portals, nether ambience, footsteps, raids, dodos, zombies, fire, thunder..."></textarea>
+
+            <label>Ambience notes</label>
+            <textarea data-save="audio.ambience" placeholder="Forest, caves, village, nether, island, battle, silence..."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer-space"></div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDecRBiBzrpHry4H8N876y6kvB9eOIc0e4",
+      authDomain: "hour1life.firebaseapp.com",
+      projectId: "hour1life",
+      storageBucket: "hour1life.firebasestorage.app",
+      messagingSenderId: "616823251848",
+      appId: "1:616823251848:web:55bf1c1d40074c08c6103d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const plannerRef = doc(db, "sharedPlanners", "hour1life");
+
+    /*
+      IMPORTANT FIX:
+      Every editable page now has its own stable id.
+      The old code saved scene data by number, like scenes.0.story.
+      That works until you add extra pages or duplicate titles.
+      Now it saves like pages.scene-16.story or pages.horn-origin.story.
+    */
+    const plannerPages = [
+      { id: "whole-story", title: "The Whole Story", group: "Whole Story", label: "Whole Story", legacyIndex: null },
+
+      { id: "scene-1", title: "The Council", group: "Scenes", label: "Scene 1", legacyIndex: 0 },
+      { id: "scene-2", title: "Birth and Early Days", group: "Scenes", label: "Scene 2", legacyIndex: 1 },
+      { id: "scene-3", title: "Exploring the Area", group: "Scenes", label: "Scene 3", legacyIndex: 2 },
+      { id: "scene-4", title: "Nether Trip", group: "Scenes", label: "Scene 4", legacyIndex: 3 },
+      { id: "scene-5", title: "Dodo Island", group: "Scenes", label: "Scene 5", legacyIndex: 4 },
+      { id: "scene-6", title: "FlatscreenTV", group: "Scenes", label: "Scene 6", legacyIndex: 5 },
+      { id: "scene-7", title: "065", group: "Scenes", label: "Scene 7", legacyIndex: 6 },
+      { id: "scene-8", title: "Zombie Apocalypse", group: "Scenes", label: "Scene 8", legacyIndex: 7 },
+      { id: "scene-9", title: "Trial Chamber", group: "Scenes", label: "Scene 9", legacyIndex: 8 },
+      { id: "scene-10", title: "The Griefer", group: "Scenes", label: "Scene 10", legacyIndex: 9 },
+      { id: "scene-11", title: "The Lore Story", group: "Scenes", label: "Scene 11", legacyIndex: 10 },
+      { id: "scene-12", title: "The Map", group: "Scenes", label: "Scene 12", legacyIndex: 11 },
+      { id: "scene-13", title: "The Portal", group: "Scenes", label: "Scene 13", legacyIndex: 12 },
+      { id: "scene-14", title: "The Preparation", group: "Scenes", label: "Scene 14", legacyIndex: 13 },
+      { id: "scene-15", title: "The Raid", group: "Scenes", label: "Scene 15", legacyIndex: 14 },
+      { id: "scene-16", title: "The Horn of Everwatch", group: "Scenes", label: "Scene 16", legacyIndex: 15 },
+      { id: "scene-17", title: "The Family Golem", group: "Scenes", label: "Scene 17", legacyIndex: 16 },
+      { id: "scene-18", title: "The Reveal", group: "Scenes", label: "Scene 18", legacyIndex: 17 },
+      { id: "scene-19", title: "A Last Stand", group: "Scenes", label: "Scene 19", legacyIndex: 18 },
+      { id: "scene-20", title: "The End?", group: "Scenes", label: "Scene 20", legacyIndex: 19 },
+      { id: "scene-21", title: "The Reunion", group: "Scenes", label: "Scene 21", legacyIndex: 20 },
+      { id: "scene-22", title: "Don't Worry, It's Natural", group: "Scenes", label: "Scene 22", legacyIndex: 21 },
+
+      { id: "legacy-babyhandler", title: "The Legacy of The Babyhandler", group: "Extra Story Pages", label: "Side Story" },
+      { id: "legacy-halvar-strength", title: "The Legacy of Halvar´s strength", group: "Extra Story Pages", label: "Side Story" },
+      { id: "horn-origin", title: "The Horn of Everwatch", group: "Extra Story Pages", label: "Origin Story" },
+      { id: "the-4-gods", title: "The 4 Gods", group: "Extra Story Pages", label: "Side Story" },
+      { id: "all-achievements", title: "All Achievements", group: "Extra Story Pages", label: "Reference Page" },
+      { id: "all-ingame-tips", title: "All Ingame Tips", group: "Extra Story Pages", label: "Reference Page" }
+    ];
+
+    const statusOptions = ["Idea", "Story Written", "Recorded", "Animated", "Edited", "Done"];
+    let currentPageId = "whole-story";
+    const saveTimeouts = {};
+
+    const sceneFields = {
+      status: document.getElementById("sceneStatus"),
+      mood: document.getElementById("sceneMood"),
+      priority: document.getElementById("scenePriority"),
+      story: document.getElementById("sceneStory"),
+      shots: document.getElementById("sceneShots"),
+      music: document.getElementById("sceneMusic"),
+      sfx: document.getElementById("sceneSfx"),
+      trailer: document.getElementById("sceneTrailer")
+    };
+
+    const characterSection = document.getElementById("characterSection");
+    const characterList = document.getElementById("characterList");
+    const addCharacterButton = document.getElementById("addCharacterButton");
+
+    const emptyCharacter = {
+      storyName: "",
+      minecraftName: "",
+      skin: "",
+      personality: "",
+      notes: ""
+    };
+
+    let remoteData = {
+      overview: {},
+      trailer: {},
+      audio: {},
+      scenes: {}, // kept only so old saved data can still be read
+      pages: {}
+    };
+
+    function setSaveIndicator(text) {
+      const indicator = document.getElementById("saveIndicator");
+      indicator.textContent = text;
+      clearTimeout(window.saveTimer);
+      window.saveTimer = setTimeout(() => indicator.textContent = "saved", 700);
+    }
+
+    function setNestedValue(object, path, value) {
+      const parts = path.split(".");
+      let current = object;
+      for (let i = 0; i < parts.length - 1; i++) {
+        const key = parts[i];
+        if (current[key] === undefined || typeof current[key] !== "object") {
+          current[key] = {};
+        }
+        current = current[key];
+      }
+      current[parts[parts.length - 1]] = value;
+    }
+
+    function buildNestedData(path, value) {
+      const parts = path.split(".");
+      const data = {};
+      let current = data;
+      for (let i = 0; i < parts.length - 1; i++) {
+        current[parts[i]] = {};
+        current = current[parts[i]];
+      }
+      current[parts[parts.length - 1]] = value;
+      return data;
+    }
+
+    function normalizeFirestoreData(data) {
+      const normalized = {};
+      for (const key in data) {
+        if (!Object.prototype.hasOwnProperty.call(data, key)) continue;
+        const value = data[key];
+        if (key.includes(".")) {
+          setNestedValue(normalized, key, value);
+        } else if (value && typeof value === "object" && !Array.isArray(value)) {
+          normalized[key] = normalizeFirestoreData(value);
+        } else {
+          normalized[key] = value;
+        }
+      }
+      return normalized;
+    }
+
+    function setElementValueIfNotFocused(element, value) {
+      if (document.activeElement !== element) {
+        element.value = value ?? "";
+      }
+    }
+
+    async function saveRemoteField(path, value) {
+      clearTimeout(saveTimeouts[path]);
+      setNestedValue(remoteData, path, value);
+      saveTimeouts[path] = setTimeout(async () => {
+        try {
+          setSaveIndicator("saving...");
+          await updateDoc(plannerRef, { [path]: value });
+        } catch (error) {
+          if (error.code === "not-found") {
+            await setDoc(plannerRef, buildNestedData(path, value), { merge: true });
+          } else {
+            console.error("Firebase save error:", error);
+            setSaveIndicator("error");
+          }
+        }
+      }, 500);
+    }
+
+    function showPanel(panelId) {
+      document.querySelectorAll(".panel").forEach(panel => panel.classList.remove("active"));
+      document.getElementById(panelId).classList.add("active");
+
+      document.querySelectorAll(".nav-button").forEach(button => {
+        button.classList.toggle("active", button.dataset.panel === panelId);
+      });
+
+      if (panelId !== "sceneEditor") {
+        document.querySelectorAll(".scene-button").forEach(button => button.classList.remove("active"));
+      }
+    }
+
+    function getPageData(page) {
+      if (remoteData.pages?.[page.id]) {
+        return remoteData.pages[page.id];
+      }
+
+      // Backward compatibility: old saved data used scenes.0, scenes.1, etc.
+      if (page.legacyIndex !== null && page.legacyIndex !== undefined && remoteData.scenes?.[page.legacyIndex]) {
+        return remoteData.scenes[page.legacyIndex];
+      }
+
+      return {};
+    }
+
+
+
+    function isRealScene(page) {
+      return page?.group === "Scenes";
+    }
+
+    function getCurrentPage() {
+      return plannerPages.find(item => item.id === currentPageId);
+    }
+
+    function getCharactersForPage(page) {
+      const pageData = getPageData(page);
+      return Array.isArray(pageData.characters) ? pageData.characters : [];
+    }
+
+    function collectCharacterData() {
+      return Array.from(characterList.querySelectorAll(".character-card")).map(card => ({
+        storyName: card.querySelector('[data-character-field="storyName"]').value,
+        minecraftName: card.querySelector('[data-character-field="minecraftName"]').value,
+        skin: card.querySelector('[data-character-field="skin"]').value,
+        personality: card.querySelector('[data-character-field="personality"]').value,
+        notes: card.querySelector('[data-character-field="notes"]').value
+      }));
+    }
+
+    function saveCharactersForCurrentPage() {
+      const page = getCurrentPage();
+      if (!isRealScene(page)) return;
+      saveRemoteField(`pages.${currentPageId}.characters`, collectCharacterData());
+    }
+
+    function createCharacterCard(character = {}, index = 0) {
+      const card = document.createElement("div");
+      card.className = "character-card";
+      card.innerHTML = `
+        <div class="character-card-header">
+          <strong>Character ${index + 1}</strong>
+          <button class="danger-button" type="button">Remove</button>
+        </div>
+        <div class="character-fields">
+          <div>
+            <label>Story name</label>
+            <input data-character-field="storyName" placeholder="Example: Minos, Ruby, Tenos" />
+          </div>
+          <div>
+            <label>Minecraft name</label>
+            <input data-character-field="minecraftName" placeholder="Example: BlueMII_, Rubythefox_" />
+          </div>
+          <div>
+            <label>Skin</label>
+            <input data-character-field="skin" placeholder="Skin name, link, folder name, or short description" />
+          </div>
+          <div>
+            <label>Personality</label>
+            <input data-character-field="personality" placeholder="Example: loyal, reckless, calm, intimidating" />
+          </div>
+          <div style="grid-column: 1 / -1;">
+            <label>Scene notes</label>
+            <textarea data-character-field="notes" placeholder="What this character does in this scene, important expressions, poses, gear, injuries, etc."></textarea>
+          </div>
+        </div>
+      `;
+
+      Object.keys(emptyCharacter).forEach(key => {
+        const input = card.querySelector(`[data-character-field="${key}"]`);
+        input.value = character[key] ?? "";
+        input.addEventListener("input", saveCharactersForCurrentPage);
+      });
+
+      card.querySelector(".danger-button").addEventListener("click", () => {
+        card.remove();
+        refreshCharacterNumbers();
+        saveCharactersForCurrentPage();
+      });
+
+      return card;
+    }
+
+    function refreshCharacterNumbers() {
+      characterList.querySelectorAll(".character-card-header strong").forEach((title, index) => {
+        title.textContent = `Character ${index + 1}`;
+      });
+    }
+
+    function renderCharacters(page, force = false) {
+      if (!isRealScene(page)) {
+        characterSection.classList.add("hidden");
+        characterList.innerHTML = "";
+        return;
+      }
+
+      characterSection.classList.remove("hidden");
+
+      if (!force && characterSection.contains(document.activeElement)) {
+        return;
+      }
+
+      const characters = getCharactersForPage(page);
+      characterList.innerHTML = "";
+      characters.forEach((character, index) => {
+        characterList.appendChild(createCharacterCard(character, index));
+      });
+
+      if (characters.length === 0) {
+        characterList.appendChild(createCharacterCard({}, 0));
+      }
+    }
+
+    function fillSceneFields(pageData = {}) {
+      setElementValueIfNotFocused(sceneFields.status, pageData.status ?? "Idea");
+      setElementValueIfNotFocused(sceneFields.mood, pageData.mood ?? "");
+      setElementValueIfNotFocused(sceneFields.priority, pageData.priority ?? "Normal");
+      setElementValueIfNotFocused(sceneFields.story, pageData.story ?? "");
+      setElementValueIfNotFocused(sceneFields.shots, pageData.shots ?? "");
+      setElementValueIfNotFocused(sceneFields.music, pageData.music ?? "");
+      setElementValueIfNotFocused(sceneFields.sfx, pageData.sfx ?? "");
+      setElementValueIfNotFocused(sceneFields.trailer, pageData.trailer ?? "");
+    }
+
+    function applySavedValue(path, value) {
+      const element = document.querySelector(`[data-save="${path}"]`);
+      if (element) setElementValueIfNotFocused(element, value);
+    }
+
+    function applyRemoteData(data) {
+      const normalized = normalizeFirestoreData(data);
+      remoteData.overview = normalized.overview ?? {};
+      remoteData.trailer = normalized.trailer ?? {};
+      remoteData.audio = normalized.audio ?? {};
+      remoteData.scenes = normalized.scenes ?? {};
+      remoteData.pages = normalized.pages ?? {};
+
+      ["core", "mood", "recording", "rules"].forEach(key => {
+        if (Object.prototype.hasOwnProperty.call(remoteData.overview, key)) {
+          applySavedValue(`overview.${key}`, remoteData.overview[key]);
+        }
+      });
+
+      ["concept", "highlights", "opening", "buildup", "final", "serverOffers", "textOverlays"].forEach(key => {
+        if (Object.prototype.hasOwnProperty.call(remoteData.trailer, key)) {
+          applySavedValue(`trailer.${key}`, remoteData.trailer[key]);
+        }
+      });
+
+      ["theme", "emotional", "sfx", "ambience"].forEach(key => {
+        if (Object.prototype.hasOwnProperty.call(remoteData.audio, key)) {
+          applySavedValue(`audio.${key}`, remoteData.audio[key]);
+        }
+      });
+
+      const page = plannerPages.find(item => item.id === currentPageId);
+      if (page) {
+        fillSceneFields(getPageData(page));
+        renderCharacters(page);
+      }
+
+      setSaveIndicator("synced");
+    }
+
+    function openPage(pageId) {
+      const page = plannerPages.find(item => item.id === pageId);
+      if (!page) return;
+
+      currentPageId = page.id;
+      document.getElementById("sceneNumberLabel").textContent = page.label;
+      document.getElementById("sceneTitleLabel").textContent = page.title;
+      fillSceneFields(getPageData(page));
+      renderCharacters(page, true);
+      showPanel("sceneEditor");
+
+      document.querySelectorAll(".scene-button").forEach(button => {
+        button.classList.toggle("active", button.dataset.pageId === page.id);
+      });
+    }
+
+    function buildSceneNavigation() {
+      const sceneList = document.getElementById("sceneList");
+      const sceneMapButtons = document.getElementById("sceneMapButtons");
+      let lastGroup = "";
+
+      plannerPages.forEach((page, index) => {
+        if (page.group !== lastGroup) {
+          const groupTitle = document.createElement("div");
+          groupTitle.className = "nav-title";
+          groupTitle.style.marginTop = index === 0 ? "0" : "18px";
+          groupTitle.textContent = page.group;
+          sceneList.appendChild(groupTitle);
+          lastGroup = page.group;
+        }
+
+        const sideButton = document.createElement("button");
+        sideButton.className = "scene-button";
+        sideButton.dataset.pageId = page.id;
+        const badgeText = page.legacyIndex !== null && page.legacyIndex !== undefined ? page.legacyIndex + 1 : "★";
+        sideButton.innerHTML = `<span class="scene-num">${badgeText}</span><span>${page.title}</span>`;
+        sideButton.addEventListener("click", () => openPage(page.id));
+        sceneList.appendChild(sideButton);
+
+        const mapButton = document.createElement("button");
+        mapButton.innerHTML = `<strong>${page.label}</strong><br><span style="color: var(--muted);">${page.title}</span>`;
+        mapButton.addEventListener("click", () => openPage(page.id));
+        sceneMapButtons.appendChild(mapButton);
+      });
+    }
+
+    function setupStatusOptions() {
+      statusOptions.forEach(status => {
+        const option = document.createElement("option");
+        option.value = status;
+        option.textContent = status;
+        sceneFields.status.appendChild(option);
+      });
+    }
+
+    function setupSaving() {
+      document.querySelectorAll("[data-save]").forEach(element => {
+        element.addEventListener("input", () => saveRemoteField(element.dataset.save, element.value));
+      });
+
+      Object.entries(sceneFields).forEach(([field, element]) => {
+        const saveHandler = () => saveRemoteField(`pages.${currentPageId}.${field}`, element.value);
+        element.addEventListener("input", saveHandler);
+        element.addEventListener("change", saveHandler);
+      });
+    }
+
+    function setupCharacterButton() {
+      addCharacterButton.addEventListener("click", () => {
+        const page = getCurrentPage();
+        if (!isRealScene(page)) return;
+        const index = characterList.querySelectorAll(".character-card").length;
+        characterList.appendChild(createCharacterCard({}, index));
+        saveCharactersForCurrentPage();
+      });
+    }
+
+    function setupTopNav() {
+      document.querySelectorAll(".nav-button").forEach(button => {
+        button.addEventListener("click", () => showPanel(button.dataset.panel));
+      });
+    }
+
+    async function ensurePlannerDoc() {
+      const snapshot = await getDoc(plannerRef);
+      if (!snapshot.exists()) {
+        await setDoc(plannerRef, {
+          overview: {},
+          trailer: {},
+          audio: {},
+          scenes: {},
+          pages: {}
+        });
+      }
+    }
+
+    function downloadBackup() {
+      const data = {
+        overview: remoteData.overview,
+        trailer: remoteData.trailer,
+        audio: remoteData.audio,
+        scenes: remoteData.scenes,
+        pages: remoteData.pages
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "life-of-a-minos-planner-backup.json";
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+
+    async function startApp() {
+      setupStatusOptions();
+      buildSceneNavigation();
+      setupSaving();
+      setupCharacterButton();
+      setupTopNav();
+      openPage("whole-story");
+      showPanel("overview");
+
+      await ensurePlannerDoc();
+      onSnapshot(plannerRef, snapshot => {
+        if (snapshot.exists()) {
+          applyRemoteData(snapshot.data());
+        }
+      });
+
+      window.downloadBackup = downloadBackup;
+    }
+
+    startApp();
+  </script>
+</body>
+</html>
