@@ -453,7 +453,6 @@
       overflow: hidden;
       resize: none;
     }
-    }
 
     .button-row {
       display: flex;
@@ -956,43 +955,6 @@
       }
       current[parts[parts.length - 1]] = value;
       return data;
-    }
-
-      }
-        const resizeTimeouts = new Map();
-        const lastHeights = new Map();
-
-        function autoResizeTextarea(element) {
-          if (!(element instanceof HTMLTextAreaElement)) return;
-      
-          // Only resize if height actually changed (prevents unnecessary reflows)
-          const scrollHeight = element.scrollHeight;
-          const lastHeight = lastHeights.get(element);
-      
-          if (lastHeight !== undefined && Math.abs(scrollHeight - lastHeight) < 2) {
-            return; // No significant change, skip resize
-          }
-      
-          lastHeights.set(element, scrollHeight);
-      
-          // Schedule resize on next frame to batch reflows
-          if (resizeTimeouts.has(element)) {
-            cancelAnimationFrame(resizeTimeouts.get(element));
-          }
-      
-          const rafId = requestAnimationFrame(() => {
-            element.style.height = "auto";
-            element.style.height = `${scrollHeight + 2}px`;
-            resizeTimeouts.delete(element);
-          });
-      
-          resizeTimeouts.set(element, rafId);
-        }
-
-        function autoResizeTextareas(scope = document) {
-          scope.querySelectorAll("textarea").forEach(autoResizeTextarea);
-        }
-      return normalized;
     }
 
     function setElementValueIfNotFocused(element, value) {
