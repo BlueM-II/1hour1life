@@ -405,6 +405,9 @@
 
     .story-card textarea {
       min-height: 520px;
+      max-height: 520px;
+      overflow-y: auto;
+      resize: vertical;
     }
 
     .detail-card {
@@ -448,6 +451,9 @@
 
     .detail-panel textarea {
       min-height: 220px;
+      max-height: 280px;
+      overflow-y: auto;
+      resize: vertical;
     }
 
     .button-row {
@@ -896,16 +902,13 @@
     }
 
     function autoResizeTextarea(element) {
-      if (!(element instanceof HTMLTextAreaElement)) return;
-      // Preserve scroll position to prevent autoscroll lag
-      const scrollPos = element.scrollTop;
-      element.style.height = "auto";
-      element.style.height = `${element.scrollHeight + 2}px`;
-      element.scrollTop = scrollPos;
+      // Heights are now managed by CSS fixed sizes with scrolling
+      // This function is kept for compatibility but does nothing
     }
 
     function autoResizeTextareas(scope = document) {
-      scope.querySelectorAll("textarea").forEach(autoResizeTextarea);
+      // Heights are now managed by CSS fixed sizes with scrolling
+      // This function is kept for compatibility but does nothing
     }
 
     function setNestedValue(object, path, value) {
@@ -1115,8 +1118,6 @@
       Object.keys(emptyCharacter).forEach(key => {
         const input = card.querySelector(`[data-character-field="${key}"]`);
         input.value = character[key] ?? "";
-        autoResizeTextarea(input);
-        input.addEventListener("input", () => autoResizeTextarea(input));
         input.addEventListener("input", saveCharactersForCurrentPage);
       });
 
@@ -1273,14 +1274,12 @@
     function setupSaving() {
       document.querySelectorAll("[data-save]").forEach(element => {
         element.addEventListener("input", () => {
-          autoResizeTextarea(element);
           saveRemoteField(element.dataset.save, element.value);
         });
       });
 
       Object.entries(sceneFields).forEach(([field, element]) => {
         const saveHandler = () => {
-          autoResizeTextarea(element);
           saveRemoteField(`pages.${currentPageId}.${field}`, element.value);
         };
         element.addEventListener("input", saveHandler);
@@ -1289,10 +1288,7 @@
     }
 
     function setupAutoResizeTextareas() {
-      document.querySelectorAll("textarea").forEach(textarea => {
-        autoResizeTextarea(textarea);
-        textarea.addEventListener("input", () => autoResizeTextarea(textarea));
-      });
+      // No-op: textareas now use CSS-managed fixed heights with scrolling
     }
 
     function setupDetailTabs() {
