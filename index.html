@@ -405,9 +405,8 @@
 
     .story-card textarea {
       min-height: 520px;
-      max-height: 520px;
-      overflow-y: auto;
-      resize: vertical;
+      overflow: hidden;
+      resize: none;
     }
 
     .detail-card {
@@ -451,9 +450,9 @@
 
     .detail-panel textarea {
       min-height: 220px;
-      max-height: 280px;
-      overflow-y: auto;
-      resize: vertical;
+      overflow: hidden;
+      resize: none;
+    }
     }
 
     .button-row {
@@ -901,14 +900,37 @@
       window.saveTimer = setTimeout(() => indicator.textContent = "saved", 700);
     }
 
+    const resizeTimeouts = new Map();
+
     function autoResizeTextarea(element) {
-      // Heights are now managed by CSS fixed sizes with scrolling
-      // This function is kept for compatibility but does nothing
+      if (!(element instanceof HTMLTextAreaElement)) return;
+      
+      // Clear any pending resize for this element
+      if (resizeTimeouts.has(element)) {
+        cancelAnimationFrame(resizeTimeouts.get(element));
+      }
+      
+      // Schedule resize on next frame to prevent jank
+      const rafId = requestAnimationFrame(() => {
+        // Save document scroll position to prevent page jump
+        const scrollY = window.scrollY;
+        const scrollX = window.scrollX;
+        
+        // Resize the textarea
+        element.style.height = "auto";
+        element.style.height = `${element.scrollHeight + 2}px`;
+        
+        // Restore scroll position
+        window.scrollTo(scrollX, scrollY);
+        
+        resizeTimeouts.delete(element);
+      });
+      
+      resizeTimeouts.set(element, rafId);
     }
 
     function autoResizeTextareas(scope = document) {
-      // Heights are now managed by CSS fixed sizes with scrolling
-      // This function is kept for compatibility but does nothing
+      scope.querySelectorAll("textarea").forEach(autoResizeTextarea);
     }
 
     function setNestedValue(object, path, value) {
@@ -1118,6 +1140,8 @@
       Object.keys(emptyCharacter).forEach(key => {
         const input = card.querySelector(`[data-character-field="${key}"]`);
         input.value = character[key] ?? "";
+        autoResizeTextarea(input);
+        input.addEventListener("input", () => autoResizeTextarea(input));
         input.addEventListener("input", saveCharactersForCurrentPage);
       });
 
@@ -1274,12 +1298,14 @@
     function setupSaving() {
       document.querySelectorAll("[data-save]").forEach(element => {
         element.addEventListener("input", () => {
+          autoResizeTextarea(element);
           saveRemoteField(element.dataset.save, element.value);
         });
       });
 
       Object.entries(sceneFields).forEach(([field, element]) => {
         const saveHandler = () => {
+          autoResizeTextarea(element);
           saveRemoteField(`pages.${currentPageId}.${field}`, element.value);
         };
         element.addEventListener("input", saveHandler);
@@ -1288,7 +1314,10 @@
     }
 
     function setupAutoResizeTextareas() {
-      // No-op: textareas now use CSS-managed fixed heights with scrolling
+      document.querySelectorAll("textarea").forEach(textarea => {
+        autoResizeTextarea(textarea);
+        textarea.addEventListener("input", () => autoResizeTextarea(textarea));
+      });
     }
 
     function setupDetailTabs() {
