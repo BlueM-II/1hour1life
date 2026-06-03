@@ -41,7 +41,7 @@
 
     .app {
       display: grid;
-      grid-template-columns: 310px 1fr;
+      grid-template-columns: 232px minmax(0, 1fr);
       min-height: 100vh;
     }
 
@@ -53,14 +53,14 @@
       border-right: 1px solid var(--line);
       background: rgba(7, 9, 15, 0.86);
       backdrop-filter: blur(16px);
-      padding: 24px 18px;
+      padding: 16px 12px;
     }
 
     .brand {
-      margin-bottom: 24px;
-      padding: 18px;
+      margin-bottom: 18px;
+      padding: 14px;
       border: 1px solid var(--line);
-      border-radius: 22px;
+      border-radius: 16px;
       background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.025));
       box-shadow: var(--shadow);
     }
@@ -74,15 +74,14 @@
     }
 
     .brand h1 {
-      font-size: 27px;
+      font-size: 22px;
       line-height: 1.05;
       margin: 8px 0 10px;
-      letter-spacing: -1px;
     }
 
     .brand p {
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
       line-height: 1.5;
     }
 
@@ -109,9 +108,9 @@
       background: transparent;
       text-align: left;
       border-radius: 14px;
-      padding: 11px 12px;
+      padding: 10px 9px;
       transition: 0.15s ease;
-      font-size: 14px;
+      font-size: 13px;
       width: 100%;
     }
 
@@ -129,9 +128,15 @@
 
     .scene-button {
       display: grid;
-      grid-template-columns: 31px 1fr;
+      grid-template-columns: 30px minmax(0, 1fr);
       gap: 8px;
       align-items: center;
+    }
+
+    .scene-button span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .scene-num {
@@ -152,23 +157,24 @@
     }
 
     main {
-      padding: 42px;
-      max-width: 1180px;
+      padding: 28px clamp(18px, 3vw, 42px);
+      max-width: 1460px;
       width: 100%;
+      margin: 0 auto;
     }
 
     .hero {
       position: relative;
       overflow: hidden;
-      min-height: 250px;
+      min-height: 190px;
       border: 1px solid var(--line);
-      border-radius: 32px;
+      border-radius: 20px;
       background:
         linear-gradient(120deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02)),
         radial-gradient(circle at 70% 20%, rgba(215,168,79,0.2), transparent 32%),
         var(--panel);
       box-shadow: var(--shadow);
-      padding: 36px;
+      padding: 28px;
       margin-bottom: 24px;
     }
 
@@ -193,9 +199,8 @@
     }
 
     .hero h2 {
-      font-size: clamp(42px, 7vw, 82px);
-      letter-spacing: -3px;
-      line-height: 0.94;
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 0.98;
       margin-bottom: 18px;
       max-width: 800px;
     }
@@ -237,14 +242,14 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
       gap: 16px;
       margin-top: 16px;
     }
 
     .card {
       border: 1px solid var(--line);
-      border-radius: 24px;
+      border-radius: 16px;
       background: rgba(16,21,34,0.82);
       box-shadow: 0 10px 32px rgba(0,0,0,0.22);
       padding: 22px;
@@ -278,15 +283,16 @@
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.055);
       color: var(--text);
-      border-radius: 16px;
+      border-radius: 12px;
       padding: 14px 15px;
       font-size: 15px;
       outline: none;
     }
 
     textarea {
-      min-height: 160px;
-      resize: vertical;
+      min-height: 120px;
+      resize: none;
+      overflow: hidden;
       line-height: 1.55;
     }
 
@@ -311,8 +317,7 @@
     }
 
     .scene-header h2 {
-      font-size: clamp(31px, 5vw, 52px);
-      letter-spacing: -1.8px;
+      font-size: clamp(30px, 4vw, 48px);
       line-height: 1;
     }
 
@@ -333,8 +338,61 @@
 
     .split {
       display: grid;
-      grid-template-columns: 1.25fr 0.75fr;
+      grid-template-columns: 1fr;
       gap: 16px;
+    }
+
+    .scene-workspace {
+      display: grid;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .story-card textarea {
+      min-height: 520px;
+    }
+
+    .detail-card {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .detail-tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .detail-tab {
+      width: auto;
+      flex: 0 0 auto;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      color: var(--muted);
+      padding: 9px 12px;
+      font-weight: 700;
+    }
+
+    .detail-tab.active {
+      background: var(--gold-soft);
+      border-color: rgba(215,168,79,0.28);
+      color: #ffd98b;
+    }
+
+    .detail-panel {
+      display: none;
+      padding: 22px;
+    }
+
+    .detail-panel.active {
+      display: block;
+    }
+
+    .detail-panel textarea {
+      min-height: 220px;
     }
 
     .button-row {
@@ -383,7 +441,7 @@
 
 
     .character-section {
-      margin-top: 16px;
+      margin-top: 0;
     }
 
     .character-toolbar {
@@ -402,7 +460,7 @@
 
     .character-card {
       border: 1px solid var(--line);
-      border-radius: 20px;
+      border-radius: 14px;
       background: rgba(255,255,255,0.035);
       padding: 16px;
     }
@@ -446,6 +504,7 @@
       aside {
         position: relative;
         height: auto;
+        max-height: 45vh;
       }
 
       main {
@@ -558,41 +617,61 @@
           </div>
         </div>
 
-        <div class="split" style="margin-top:16px;">
-          <div class="card">
+        <div class="scene-workspace">
+          <div class="card story-card">
             <h3>Full Scene Story</h3>
             <p>Paste or write the full story for this scene here.</p>
             <label>Story</label>
-            <textarea id="sceneStory" style="min-height: 420px;" placeholder="Write the full scene story here..."></textarea>
+            <textarea id="sceneStory" placeholder="Write the full scene story here..."></textarea>
           </div>
 
-          <div class="card">
-            <h3>Scene Details</h3>
-            <label>Key shots</label>
-            <textarea id="sceneShots" placeholder="Important camera shots / visual moments..."></textarea>
-
-            <label>Music direction</label>
-            <textarea id="sceneMusic" placeholder="Music mood, pacing, instruments, intensity..."></textarea>
-
-            <label>Sound effects</label>
-            <textarea id="sceneSfx" placeholder="Footsteps, portal sounds, fire, mobs, ambience..."></textarea>
-
-            <label>Trailer-worthy moments</label>
-            <textarea id="sceneTrailer" placeholder="Exciting non-spoiler moments from this scene..."></textarea>
-          </div>
-        </div>
-
-        <div class="card character-section hidden" id="characterSection">
-          <div class="character-toolbar">
-            <div>
-              <h3>Characters, Names & Skins</h3>
-              <p class="muted-note">Only for the 22 movie scenes. Add the characters appearing in this scene, with Minecraft name, skin, personality, and notes.</p>
+          <div class="card detail-card">
+            <div class="detail-tabs" role="tablist" aria-label="Scene details">
+              <button class="detail-tab active" type="button" data-detail-tab="shots">Key Shots</button>
+              <button class="detail-tab" type="button" data-detail-tab="music">Music</button>
+              <button class="detail-tab" type="button" data-detail-tab="sfx">SFX</button>
+              <button class="detail-tab" type="button" data-detail-tab="trailer">Trailer</button>
+              <button class="detail-tab" type="button" data-detail-tab="characters">Characters</button>
             </div>
-            <button class="action-button" id="addCharacterButton" type="button">Add Character</button>
-          </div>
-          <div class="character-list" id="characterList"></div>
-        </div>
 
+            <div class="detail-panel active" data-detail-panel="shots">
+              <h3>Key Shots</h3>
+              <label>Important camera shots / visual moments</label>
+              <textarea id="sceneShots" placeholder="Important camera shots / visual moments..."></textarea>
+            </div>
+
+            <div class="detail-panel" data-detail-panel="music">
+              <h3>Music Direction</h3>
+              <label>Music mood, pacing, instruments, intensity</label>
+              <textarea id="sceneMusic" placeholder="Music mood, pacing, instruments, intensity..."></textarea>
+            </div>
+
+            <div class="detail-panel" data-detail-panel="sfx">
+              <h3>Sound Effects</h3>
+              <label>Footsteps, portal sounds, fire, mobs, ambience</label>
+              <textarea id="sceneSfx" placeholder="Footsteps, portal sounds, fire, mobs, ambience..."></textarea>
+            </div>
+
+            <div class="detail-panel" data-detail-panel="trailer">
+              <h3>Trailer-Worthy Moments</h3>
+              <label>Exciting non-spoiler moments from this scene</label>
+              <textarea id="sceneTrailer" placeholder="Exciting non-spoiler moments from this scene..."></textarea>
+            </div>
+
+            <div class="detail-panel" data-detail-panel="characters">
+              <div class="character-section hidden" id="characterSection">
+                <div class="character-toolbar">
+                  <div>
+                    <h3>Characters, Names & Skins</h3>
+                    <p class="muted-note">Only for the 22 movie scenes. Add the characters appearing in this scene, with Minecraft name, skin, personality, and notes.</p>
+                  </div>
+                  <button class="action-button" id="addCharacterButton" type="button">Add Character</button>
+                </div>
+                <div class="character-list" id="characterList"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="panel" id="trailer">
@@ -733,6 +812,10 @@
     const characterSection = document.getElementById("characterSection");
     const characterList = document.getElementById("characterList");
     const addCharacterButton = document.getElementById("addCharacterButton");
+    const detailTabButtons = document.querySelectorAll("[data-detail-tab]");
+    const detailPanels = document.querySelectorAll("[data-detail-panel]");
+    const characterTabButton = document.querySelector('[data-detail-tab="characters"]');
+    let currentDetailTab = "shots";
 
     const emptyCharacter = {
       storyName: "",
@@ -755,6 +838,16 @@
       indicator.textContent = text;
       clearTimeout(window.saveTimer);
       window.saveTimer = setTimeout(() => indicator.textContent = "saved", 700);
+    }
+
+    function autoResizeTextarea(element) {
+      if (!(element instanceof HTMLTextAreaElement)) return;
+      element.style.height = "auto";
+      element.style.height = `${element.scrollHeight + 2}px`;
+    }
+
+    function autoResizeTextareas(scope = document) {
+      scope.querySelectorAll("textarea").forEach(autoResizeTextarea);
     }
 
     function setNestedValue(object, path, value) {
@@ -801,6 +894,7 @@
     function setElementValueIfNotFocused(element, value) {
       if (document.activeElement !== element) {
         element.value = value ?? "";
+        autoResizeTextarea(element);
       }
     }
 
@@ -832,6 +926,34 @@
 
       if (panelId !== "sceneEditor") {
         document.querySelectorAll(".scene-button").forEach(button => button.classList.remove("active"));
+      }
+
+      autoResizeTextareas(document.getElementById(panelId));
+    }
+
+    function activateDetailTab(tabName) {
+      currentDetailTab = tabName;
+
+      detailTabButtons.forEach(button => {
+        button.classList.toggle("active", button.dataset.detailTab === tabName);
+      });
+
+      detailPanels.forEach(panel => {
+        panel.classList.toggle("active", panel.dataset.detailPanel === tabName);
+      });
+
+      const activePanel = document.querySelector(`[data-detail-panel="${tabName}"]`);
+      if (activePanel) autoResizeTextareas(activePanel);
+    }
+
+    function updateDetailTabsForPage(page) {
+      const showCharacters = isRealScene(page);
+      if (characterTabButton) {
+        characterTabButton.classList.toggle("hidden", !showCharacters);
+      }
+
+      if (!showCharacters && currentDetailTab === "characters") {
+        activateDetailTab("shots");
       }
     }
 
@@ -914,6 +1036,8 @@
       Object.keys(emptyCharacter).forEach(key => {
         const input = card.querySelector(`[data-character-field="${key}"]`);
         input.value = character[key] ?? "";
+        autoResizeTextarea(input);
+        input.addEventListener("input", () => autoResizeTextarea(input));
         input.addEventListener("input", saveCharactersForCurrentPage);
       });
 
@@ -954,6 +1078,8 @@
       if (characters.length === 0) {
         characterList.appendChild(createCharacterCard({}, 0));
       }
+
+      autoResizeTextareas(characterList);
     }
 
     function fillSceneFields(pageData = {}) {
@@ -1001,6 +1127,7 @@
       const page = plannerPages.find(item => item.id === currentPageId);
       if (page) {
         fillSceneFields(getPageData(page));
+        updateDetailTabsForPage(page);
         renderCharacters(page);
       }
 
@@ -1015,8 +1142,10 @@
       document.getElementById("sceneNumberLabel").textContent = page.label;
       document.getElementById("sceneTitleLabel").textContent = page.title;
       fillSceneFields(getPageData(page));
+      updateDetailTabsForPage(page);
       renderCharacters(page, true);
       showPanel("sceneEditor");
+      activateDetailTab(currentDetailTab);
 
       document.querySelectorAll(".scene-button").forEach(button => {
         button.classList.toggle("active", button.dataset.pageId === page.id);
@@ -1064,13 +1193,32 @@
 
     function setupSaving() {
       document.querySelectorAll("[data-save]").forEach(element => {
-        element.addEventListener("input", () => saveRemoteField(element.dataset.save, element.value));
+        element.addEventListener("input", () => {
+          autoResizeTextarea(element);
+          saveRemoteField(element.dataset.save, element.value);
+        });
       });
 
       Object.entries(sceneFields).forEach(([field, element]) => {
-        const saveHandler = () => saveRemoteField(`pages.${currentPageId}.${field}`, element.value);
+        const saveHandler = () => {
+          autoResizeTextarea(element);
+          saveRemoteField(`pages.${currentPageId}.${field}`, element.value);
+        };
         element.addEventListener("input", saveHandler);
         element.addEventListener("change", saveHandler);
+      });
+    }
+
+    function setupAutoResizeTextareas() {
+      document.querySelectorAll("textarea").forEach(textarea => {
+        autoResizeTextarea(textarea);
+        textarea.addEventListener("input", () => autoResizeTextarea(textarea));
+      });
+    }
+
+    function setupDetailTabs() {
+      detailTabButtons.forEach(button => {
+        button.addEventListener("click", () => activateDetailTab(button.dataset.detailTab));
       });
     }
 
@@ -1126,6 +1274,8 @@
       setupStatusOptions();
       buildSceneNavigation();
       setupSaving();
+      setupAutoResizeTextareas();
+      setupDetailTabs();
       setupCharacterButton();
       setupTopNav();
       openPage("whole-story");
