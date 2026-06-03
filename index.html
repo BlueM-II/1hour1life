@@ -28,6 +28,25 @@
 
     html {
       scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(215,168,79,0.4) rgba(16,21,34,0.5);
+    }
+
+    html::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    html::-webkit-scrollbar-track {
+      background: rgba(16,21,34,0.5);
+    }
+
+    html::-webkit-scrollbar-thumb {
+      background: rgba(215,168,79,0.4);
+      border-radius: 5px;
+    }
+
+    html::-webkit-scrollbar-thumb:hover {
+      background: rgba(215,168,79,0.6);
     }
 
     body {
@@ -37,6 +56,23 @@
         radial-gradient(circle at 80% 10%, rgba(86,120,255,0.09), transparent 30%),
         linear-gradient(135deg, #05060a 0%, #0b1020 55%, #07090f 100%);
       color: var(--text);
+    }
+
+    body::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    body::-webkit-scrollbar-track {
+      background: rgba(16,21,34,0.5);
+    }
+
+    body::-webkit-scrollbar-thumb {
+      background: rgba(215,168,79,0.4);
+      border-radius: 5px;
+    }
+
+    body::-webkit-scrollbar-thumb:hover {
+      background: rgba(215,168,79,0.6);
     }
 
     .app {
@@ -54,6 +90,25 @@
       background: rgba(7, 9, 15, 0.86);
       backdrop-filter: blur(16px);
       padding: 16px 12px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(215,168,79,0.4) rgba(16,21,34,0.3);
+    }
+
+    aside::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    aside::-webkit-scrollbar-track {
+      background: rgba(16,21,34,0.3);
+    }
+
+    aside::-webkit-scrollbar-thumb {
+      background: rgba(215,168,79,0.4);
+      border-radius: 4px;
+    }
+
+    aside::-webkit-scrollbar-thumb:hover {
+      background: rgba(215,168,79,0.6);
     }
 
     .brand {
@@ -842,8 +897,11 @@
 
     function autoResizeTextarea(element) {
       if (!(element instanceof HTMLTextAreaElement)) return;
+      // Preserve scroll position to prevent autoscroll lag
+      const scrollPos = element.scrollTop;
       element.style.height = "auto";
       element.style.height = `${element.scrollHeight + 2}px`;
+      element.scrollTop = scrollPos;
     }
 
     function autoResizeTextareas(scope = document) {
