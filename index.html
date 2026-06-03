@@ -957,6 +957,22 @@
       return data;
     }
 
+    function normalizeFirestoreData(data) {
+      const normalized = {};
+      for (const key in data) {
+        if (!Object.prototype.hasOwnProperty.call(data, key)) continue;
+        const value = data[key];
+        if (key.includes(".")) {
+          setNestedValue(normalized, key, value);
+        } else if (value && typeof value === "object" && !Array.isArray(value)) {
+          normalized[key] = normalizeFirestoreData(value);
+        } else {
+          normalized[key] = value;
+        }
+      }
+      return normalized;
+    }
+
     function setElementValueIfNotFocused(element, value) {
       if (document.activeElement !== element) {
         element.value = value ?? "";
